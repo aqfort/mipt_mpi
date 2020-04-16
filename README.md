@@ -1,2 +1,1 @@
-# mipt.mpi
-MPI programming
+# MPI programming
