@@ -25,8 +25,8 @@ double F_EXACT(const int &k,
                const int &m);
 
 double U_EXPLICIT(const int &m,
-                  double* DATA_LINE,
-                  double* fooo_LINE);
+                  double *DATA_LINE,
+                  double *fooo_LINE);
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -37,10 +37,10 @@ double F_EXACT_2(const int &k,
                  const int &m);
 
 double U_EXPLICIT_2(const int &m,
-                    double* DATA_LINE,
-                    double* fooo_LINE);
+                    double *DATA_LINE,
+                    double *fooo_LINE);
 
-void PRINT(double* DATA);
+void PRINT(double *DATA);
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -48,7 +48,7 @@ void PRINT(double* DATA);
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
 
     MPI_Init(&argc, &argv);
 
@@ -68,24 +68,24 @@ int main(int argc, char** argv) {
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-    double* DATA_EXACT;
-    double* DATA;
+    double *DATA_EXACT;
+    double *DATA;
 
-    double* fooo;
+    double *fooo;
 
-    double* SUBDATA_EXACT;
-    double* SUBDATA;
+    double *SUBDATA_EXACT;
+    double *SUBDATA;
 
     if(RANK == 0) {
-        DATA_EXACT = (double*) calloc((K + 1) * (M + 1), sizeof(double));
-        DATA = (double*) calloc((K + 1) * (M + 1), sizeof(double));
-        fooo = (double*) calloc((K + 1) * (M + 1), sizeof(double));
+        DATA_EXACT = (double *) calloc((K + 1) * (M + 1), sizeof(double));
+        DATA = (double *) calloc((K + 1) * (M + 1), sizeof(double));
+        fooo = (double *) calloc((K + 1) * (M + 1), sizeof(double));
     }
 
     int P = (M + 1) / SIZE; // x-axis splitting: P nodes for each process
 
-    SUBDATA_EXACT = (double*) calloc(P, sizeof(double));
-    SUBDATA = (double*) calloc(P, sizeof(double));
+    SUBDATA_EXACT = (double *) calloc(P, sizeof(double));
+    SUBDATA = (double *) calloc(P, sizeof(double));
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
                 fooo[(M + 1) * k + p] = F_EXACT(k, p); // F(t, x) -- the rest
             }
 
-            DATA[(M + 1) * k] = U_EXACT(k, 0); // Initial conditions: U(t,0) = PSI(t)
+            DATA[(M + 1) * k] = U_EXACT(k, 0); // Initial conditions: U(t, 0) = PSI(t)
             DATA[(M + 1) * k + M] = U_EXACT(k, M); // Initial conditions: U(t, X) = PSI'(t)
         }
 
@@ -150,10 +150,10 @@ int main(int argc, char** argv) {
 
     P = (M - 1) / SIZE;
 
-    SUBDATA = (double*) calloc(P, sizeof(double));
+    SUBDATA = (double *) calloc(P, sizeof(double));
 
-    double* DATA_LINE = (double*) calloc((P + 2), sizeof(double)); // Preceding line of DATA
-    double* fooo_LINE = (double*) calloc((P + 2), sizeof(double)); // Preceding line of fooo
+    double *DATA_LINE = (double *) calloc((P + 2), sizeof(double)); // Preceding line of DATA
+    double *fooo_LINE = (double *) calloc((P + 2), sizeof(double)); // Preceding line of fooo
 
     // Initialize DATA_LINE at k = 1
 
@@ -169,8 +169,8 @@ int main(int argc, char** argv) {
     }
 
     {
-        MPI_Recv(&DATA_LINE[0], 1, MPI_DOUBLE, 0, 10, MPI_COMM_WORLD, NULL);
-        MPI_Recv(&DATA_LINE[P + 1], 1, MPI_DOUBLE, 0, 20, MPI_COMM_WORLD, NULL);
+        MPI_Recv(&DATA_LINE[0], 1, MPI_DOUBLE, 0, 10, MPI_COMM_WORLD, &STATUS);
+        MPI_Recv(&DATA_LINE[P + 1], 1, MPI_DOUBLE, 0, 20, MPI_COMM_WORLD, &STATUS);
     }
 
     // 
@@ -190,8 +190,8 @@ int main(int argc, char** argv) {
         }
 
         {
-            MPI_Recv(&fooo_LINE[0], 1, MPI_DOUBLE, 0, 10, MPI_COMM_WORLD, NULL);
-            MPI_Recv(&fooo_LINE[P + 1], 1, MPI_DOUBLE, 0, 20, MPI_COMM_WORLD, NULL);
+            MPI_Recv(&fooo_LINE[0], 1, MPI_DOUBLE, 0, 10, MPI_COMM_WORLD, &STATUS);
+            MPI_Recv(&fooo_LINE[P + 1], 1, MPI_DOUBLE, 0, 20, MPI_COMM_WORLD, &STATUS);
         }
 
         //
@@ -228,23 +228,26 @@ int main(int argc, char** argv) {
         }
 
         {
-            MPI_Recv(&DATA_LINE[0], 1, MPI_DOUBLE, 0, 10, MPI_COMM_WORLD, NULL);
-            MPI_Recv(&DATA_LINE[P + 1], 1, MPI_DOUBLE, 0, 20, MPI_COMM_WORLD, NULL);
+            MPI_Recv(&DATA_LINE[0], 1, MPI_DOUBLE, 0, 10, MPI_COMM_WORLD, &STATUS);
+            MPI_Recv(&DATA_LINE[P + 1], 1, MPI_DOUBLE, 0, 20, MPI_COMM_WORLD, &STATUS);
         }
     }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-    if(RANK == 0) {
-        cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-        cout << "░░░░░░░░░░░░░░░░░░░░░░░░░DATA_EXACT░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-        cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-        PRINT(DATA_EXACT);
-        cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-        cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░DATA░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-        cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-        PRINT(DATA);
-    }
+    // if(RANK == 0) {
+    //     cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+    //     cout << "░░░░░░░░░░░░░░░░░░░░░░░░░DATA_EXACT░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+    //     cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+
+    //     PRINT(DATA_EXACT);
+        
+    //     cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+    //     cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░DATA░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+    //     cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+        
+    //     PRINT(DATA);
+    // }
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -285,17 +288,17 @@ double U_EXACT(const int &k,
 double F_EXACT(const int &k,
                const int &m) {
     return (U_EXACT(k + 1, m) - U_EXACT(k, m)) * K / ((double) T) + 
-           (U_EXACT(k, m) - U_EXACT(k, m - 1)) * A * M * / ((double) X);
+           (U_EXACT(k, m) - U_EXACT(k, m - 1)) * A * M / ((double) X);
 }
 
 double U_EXPLICIT(const int &m,
-                  double* DATA_LINE,
-                  double* fooo_LINE) {
+                  double *DATA_LINE,
+                  double *fooo_LINE) {
     return DATA_LINE[m] +
            (fooo_LINE[m] - (DATA_LINE[m] - DATA_LINE[m - 1]) * A * M / ((double) X)) * T / ((double) K);
 }
 
-void PRINT(double* DATA) {
+void PRINT(double *DATA) {
     long flag = cout.precision();
     cout << fixed << setprecision(7);
 
@@ -334,8 +337,8 @@ double F_EXACT_2(const int &k,
 }
 
 double U_EXPLICIT_2(const int &m,
-                    double* DATA_LINE,
-                    double* fooo_LINE) {
+                    double *DATA_LINE,
+                    double *fooo_LINE) {
     return DATA_LINE[m] +
            (fooo_LINE[m] - (DATA_LINE[m] - DATA_LINE[m - 1]) * A * M / ((double) X)) * T / ((double) K);
 }

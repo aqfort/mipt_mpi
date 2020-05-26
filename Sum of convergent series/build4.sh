@@ -2,18 +2,12 @@
 
 ARG=10000000
 
-mpic++ 4prog.cpp
-
-# ##### ##### ##### ##### #####
-# COMMANDS="job4.sh"
-# JOBIDS=""
-# for CMD in $COMMANDS; do
-#     JOBIDS="$JOBIDS:`qsub $CMD`"
-# done
-# qsub -W depend=afterok:$JOBIDS postprocessing.sh
-# ##### ##### ##### ##### #####
+mpic++ task4.cpp
 
 JOBID=$(qsub -v ARG=$ARG job4.sh)
+
+echo "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+
 echo Job ID: $JOBID
 
 TEMP=$(echo $JOBID | cut -f1 -d.)
@@ -29,10 +23,9 @@ while [ ! -e $ERR ]; do
     sleep 1;
 done
 
-rm -rf a.out
 mv $OUT result.txt
 rm $ERR
 
-echo "_____ _____ _____ _____ _____"
+echo "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
 cat result.txt
-echo "_____ _____ _____ _____ _____"
+echo "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"

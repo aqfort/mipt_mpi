@@ -6,3 +6,4 @@
 
 cd $PBS_O_WORKDIR
 mpirun --hostfile $PBS_NODEFILE -np 12 ./a.out ${ARG}
+rm -rf a.out
