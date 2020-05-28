@@ -121,12 +121,12 @@ grid=both, xlabel={x}, ylabel={t}, zlabel={$ u(x, t) = \sin(\pi (t + 0.5)) \sin(
 
 \begin{tikzpicture}
 \begin{axis}[view={120}{10}, grid=both, xlabel={k}, ylabel={m}, title={\text{Точные значения}}]
-\addplot3[surf, mesh/rows=41] file {DATA_EXACT.dat};
+\addplot3[surf, mesh/rows=41] file {DATA_EXACT.txt};
 \end{axis}
 \end{tikzpicture}
 \begin{tikzpicture}
 \begin{axis}[view={120}{10}, grid=both, xlabel={k}, ylabel={m}, title={\text{Результат работы ЯС}}]
-\addplot3[surf, mesh/rows=41] file {DATA.dat};
+\addplot3[surf, mesh/rows=41] file {DATA.txt};
 \end{axis}
 \end{tikzpicture}
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OUT="final"
+OUT="lab"
 
 mpic++ -o $OUT $OUT.cpp
 
@@ -8,6 +8,6 @@ while [ ! -e $OUT ]; do
     sleep 1;
 done
 
-mpiexec -n 4 ./$OUT
+mpiexec -np 3 ./$OUT
 
-# rm $OUT
+rm $OUT
