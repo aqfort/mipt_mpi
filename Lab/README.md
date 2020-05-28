@@ -1,4 +1,4 @@
-# Check `Report.pdf` out
+# `Report.pdf`
 
 ## it will be soon (complete tex-file)
 
