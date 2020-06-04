@@ -4,8 +4,8 @@
 #include <cmath>
 #include <fstream>
 
-#define K 40
-#define M 20
+#define K 100
+#define M 50000
 
 #define A 0.5
 
@@ -37,6 +37,11 @@ double F_EXACT(const int &k,
 double U_EXPLICIT(const int &m,
                   double *DATA_LINE,
                   double *fooo_LINE);
+
+//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+void Print(double **DATA_EXACT,
+           double **DATA);
 
 //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -133,13 +138,6 @@ int main(int argc, char **argv) {
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    double TIME_BEGIN = 0;
-    double TIME_END = 0;
-
-    if(RANK == 0) {
-        TIME_BEGIN = MPI_Wtime();
-    }
-
     // Explicit method: calculating U(t, x)
 
     delete[] SUBDATA;
@@ -152,6 +150,13 @@ int main(int argc, char **argv) {
     double *fooo_LINE = new double[P + 2]; // Preceding line of fooo
 
     //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+    double TIME_BEGIN = 0;
+    double TIME_END = 0;
+
+    if(RANK == 0) {
+        TIME_BEGIN = MPI_Wtime();
+    }
 
     // Initialize DATA_LINE at (k = 1)
 
@@ -252,41 +257,9 @@ int main(int argc, char **argv) {
 
     // Print all results
 
-    if(RANK == 0) {
-        ofstream out("Result.txt");
-
-        long flag = out.precision();
-        out << fixed << setprecision(7);
-
-        out << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-        out << "░░░░░░░░░░░░░░░░░░░░░░░░░DATA_EXACT░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-        out << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-
-        for(int k = 0; k <= K; k++) {
-            for(int m = 0; m <= M; m++) {
-                out << k << ' ' << m << ' ' << DATA_EXACT[k][m] << endl;
-            }
-            out << endl;
-        }
-
-        out << "\n\n\n\n\n";
-
-        out << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-        out << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░DATA░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-        out << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-
-        for(int k = 0; k <= K; k++) {
-            for(int m = 0; m <= M; m++) {
-                out << k << ' ' << m << ' ' << DATA[k][m] << endl;
-            }
-            out << endl;
-        }
-
-        out.precision(flag);
-        out << resetiosflags(ios::fixed);
-
-        out.close();
-    }
+    // if(RANK == 0) {
+    //     Print(DATA_EXACT, DATA);
+    // }
 
     //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -312,9 +285,14 @@ int main(int argc, char **argv) {
 
         TIME_END = MPI_Wtime();
 
-        cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-        cout << "░░░░░░░░░░░░░░░░░░░░TIME SPENT: " << fixed << setprecision(7) << TIME_END - TIME_BEGIN << endl;
-        cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+        int a = (int) (TIME_END - TIME_BEGIN);
+        int b = (int) ((TIME_END - TIME_BEGIN - a) * 10000000);
+
+        cout << a << ',' << setfill('0') << setw(7) << b << endl;
+
+        // cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+        // cout << "░░░░░░░░░░░░░░░░░░░░TIME SPENT: " << fixed << setprecision(7) << TIME_END - TIME_BEGIN << endl;
+        // cout << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
     }
 
     //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -366,4 +344,43 @@ double U_EXPLICIT_DUMB(const int &m,
                        double *fooo_LINE) {
     return DATA_LINE[m] +
            (fooo_LINE[m] - (DATA_LINE[m] - DATA_LINE[m - 1]) * A * M / ((double) X)) * T / ((double) K);
+}
+
+//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+void Print(double **DATA_EXACT,
+           double **DATA) {
+    ofstream out("Result.txt");
+
+    long flag = out.precision();
+    out << fixed << setprecision(7);
+
+    out << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+    out << "░░░░░░░░░░░░░░░░░░░░░░░░░DATA_EXACT░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+    out << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+
+    for(int k = 0; k <= K; k++) {
+        for(int m = 0; m <= M; m++) {
+            out << k << ' ' << m << ' ' << DATA_EXACT[k][m] << endl;
+        }
+        out << endl;
+    }
+
+    out << "\n\n\n\n\n";
+
+    out << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+    out << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░DATA░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+    out << "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+
+    for(int k = 0; k <= K; k++) {
+        for(int m = 0; m <= M; m++) {
+            out << k << ' ' << m << ' ' << DATA[k][m] << endl;
+        }
+        out << endl;
+    }
+
+    out.precision(flag);
+    out << resetiosflags(ios::fixed);
+
+    out.close();
 }

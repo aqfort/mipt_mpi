@@ -130,4 +130,143 @@ grid=both, xlabel={x}, ylabel={t}, zlabel={$ u(x, t) = \sin(\pi (t + 0.5)) \sin(
 \end{axis}
 \end{tikzpicture}
 
+\newpage
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+	
+	\begin{axis}[
+	title={Зависимость времени работы от количества процессов (K = 10; M = 100000)},
+	width = 0.8\textwidth,
+	grid = major,
+	xlabel = $ n \text{ - количество процессов} $,
+	ylabel = $ T_n \text{, с - потраченное время} $,
+	xmin = 1,
+	xmax = 12
+	]
+	
+	\addplot[
+	only marks,
+	color = red,
+	mark = *
+	]
+	coordinates {
+		(1,0.026042667)(2,0.027569233)(3,0.026012933)(4,0.0252167)(5,0.027537367)(6,0.024408467)(7,0.028116333)(8,0.030718767)(9,0.077325033)(10,0.123948933)(11,0.170677267)(12,0.201711333)
+	};
+
+	\end{axis}
+	\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+	
+	\begin{axis}[
+	title={Зависимость ускорения ($ S = \dfrac{T_1}{T_n} $) от количества процессов (K = 10; M = 100000)},
+	width = 0.8\textwidth,
+	grid = major,
+	xlabel = $ n \text{ - количество процессов} $,
+	ylabel = $ S \text{ - ускорение} $,
+	xmin = 1,
+	xmax = 12
+	]
+	
+	\addplot[
+	only marks,
+	color = red,
+	mark = *
+	]
+	coordinates {
+		(1,1)(2,0.944627888)(3,1.001143021)(4,1.032754749)(5,0.945721026)(6,1.066952178)(7,0.926246903)(8,0.847777092)(9,0.336794768)(10,0.210108034)(11,0.152584273)(12,0.129108594)
+	};
+	
+	\end{axis}
+	\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+	
+	\begin{axis}[
+	title={Зависимость эффективности ($ E = \dfrac{S}{n} $) от количества процессов (K = 10; M = 100000)},
+	width = 0.8\textwidth,
+	grid = major,
+	xlabel = $ n \text{ - количество процессов} $,
+	ylabel = $ E \text{ - эффективность} $,
+	xmin = 1,
+	xmax = 12
+	]
+	
+	\addplot[
+	only marks,
+	color = red,
+	mark = *
+	]
+	coordinates {
+		(1,1)(2,0.472313944)(3,0.33371434)(4,0.258188687)(5,0.189144205)(6,0.177825363)(7,0.132320986)(8,0.105972136)(9,0.037421641)(10,0.021010803)(11,0.013871298)(12,0.01075905)
+	};
+	
+	\end{axis}
+	\end{tikzpicture}
+\end{figure}
+
+\newpage
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+	
+	\begin{loglogaxis}[
+	title={Зависимость времени работы от временной сетки в логарифмических осях},
+	width = 0.8\textwidth,
+	grid = major,
+	xlabel = $ K \text{ - количество временных узлов (n = 4; M = 100)} $,
+	ylabel = $ T_K \text{, с - потраченное время} $,
+	xmin = 0,
+	xmax = 100000
+	]
+	
+	\addplot[
+	only marks,
+	color = red,
+	mark = *
+	]
+	coordinates {
+		(10,0.005650133)(50,0.0072963)(100,0.0120965)(500,0.038580833)(1000,0.0797876)(5000,0.319602433)(10000,0.578973733)(50000,2.963356667)
+	};
+	
+	\end{loglogaxis}
+	\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+	
+	\begin{loglogaxis}[
+	title={Зависимость времени работы от пространственной сетки в логарифмических осях},
+	width = 0.8\textwidth,
+	grid = major,
+	xlabel = $ M \text{ - количество пространственных узлов (n = 4; K = 100)} $,
+	ylabel = $ T_M \text{, с - потраченное время} $,
+	xmin = 0,
+	xmax = 100000
+	]
+	
+	\addplot[
+	only marks,
+	color = red,
+	mark = *
+	]
+	coordinates {
+		(10,0.012167967)(50,0.010859133)(100,0.011796167)(500,0.011086833)(1000,0.011018067)(5000,0.019265133)(10000,0.0303361)(50000,0.112914033)
+	};
+	
+	\end{loglogaxis}
+	\end{tikzpicture}
+\end{figure}
+
 \end{document}

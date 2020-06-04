@@ -8,6 +8,6 @@ while [ ! -e $OUT ]; do
     sleep 1;
 done
 
-mpiexec -np 3 ./$OUT
+mpiexec -n 4 ./$OUT
 
 rm $OUT
